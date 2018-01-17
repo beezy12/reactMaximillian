@@ -13,16 +13,6 @@ class App extends Component {
         showPersons: false
     }
 
-  switchNameHandler = (newName) => {
-    this.setState( {
-      persons: [
-        { name: newName, age: 38 },
-        { name: 'somebody', age: 10 },
-        { name: 'manna', age: 29 }
-      ]
-    })
-  }
-
   nameChangeHandler = (event) => {
     this.setState( {
       persons: [
@@ -36,6 +26,16 @@ class App extends Component {
   togglePersonsHandler = () => {
       const doesShow = this.state.showPersons;
       this.setState({showPersons: !doesShow});
+  }
+
+  deletePersonHandler = (personIndex) => {
+      // you never want to mutate the original array...so make a copy
+      // create copy of array by calling slice method, otherwise you just have a reference a pointer to the array or object in Javascript
+      //const persons = this.state.persons.slice();
+      // or this
+      const persons = [...this.state.persons];
+      persons.splice(personIndex, 1);
+      this.setState({persons: persons})
   }
 
   render() {
@@ -52,10 +52,11 @@ class App extends Component {
       if (this.state.showPersons) {
           persons = (
               <div>
-                  {this.state.persons.map(person => {
+                  {this.state.persons.map((person, index) => {
                       return <Person
                           name={person.name}
-                          age={person.age} />
+                          age={person.age}
+                          click={() => this.deletePersonHandler(index)} />
                   })}
               </div>
           );
